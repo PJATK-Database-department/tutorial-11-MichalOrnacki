@@ -1,0 +1,59 @@
+﻿@page "/fetchdata"
+
+@using BlazorServer1.Data
+@inject StudentService _StudentService
+
+<h1>Students</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (students == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Avatar</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Birthdate</th>
+                <th>Studies</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in students)
+            {
+                <tr>
+                    <td><img src="https://www.myclient247.com.au/images/teammember/12.jpeg" alt="Italian Trulli" style="width:64px; height:64px;">
+                    <a href="/edit">Edit</a>
+                    </td>
+                    <td>@s.FirstName</td>
+                    <td>@s.LastName</td>
+                    <td>@s.Birthdate</td>
+                    <td>@s.Studies</td>
+                    <td><button type="button" onClick="DeleteStudent(@s.Birthdate)">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Student> students;
+    //private WeatherForecast[] forecasts;
+
+    protected override void OnInitialized()
+    {
+        students = _StudentService.GetStudents();
+    }
+
+    public void DeleteStudent(int idStudent)
+    {
+        students.Remove(_StudentService.FindStudent(idStudent));
+        _StudentService.DeleteStudent(idStudent);
+    }
+}
